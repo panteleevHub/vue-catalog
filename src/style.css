@@ -1,0 +1,118 @@
+:root {
+  --basic-black: #000000;
+  --basic-dark: #363636;
+  --basic-white: #ffffff;
+  --basic-grey: #464646;
+  --basic-half-grey: #7e7e7e;
+  --basic-grey-light: #e5e5e5;
+  --basic-grey-pale: #f2f2f2;
+  --basic-yellow: #ffc600;
+  --special-grey: #c4c4c4;
+  --special-grey-light: #d9d9d9;
+  --special-yellow: #f7e296;
+  --special-green: #91c92f;
+  --special-yellow-dark: #f0c52e;
+  --purple-pale: #f6dada;
+  --white-30: rgba(255, 255, 255, 0.3);
+  --white-60: rgba(255, 255, 255, 0.6);
+  --white-70: rgba(255, 255, 255, 0.7);
+  --black-10: rgba(0, 0, 0, 0.1);
+  --black-15: rgba(0, 0, 0, 0.15);
+  --black-20: rgba(0, 0, 0, 0.2);
+  --black-30: rgba(0, 0, 0, 0.3);
+  --black-40: rgba(0, 0, 0, 0.4);
+  --black-60: rgba(0, 0, 0, 0.6);
+  --yellow-dark-50: rgba(240, 197, 46, 0.5);
+  --yellow-dark-30: rgba(240, 197, 46, 0.3);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  height: 100%;
+}
+
+body {
+  display: grid;
+  grid-template-rows: min-content 1fr min-content;
+  min-height: 100%;
+  font-family: "Open Sans", "Arial", sans-serif;
+  font-size: 15px;
+  line-height: 20px;
+  font-weight: 300;
+  color: var(--basic-black);
+  background-color: var(--basic-white);
+  margin: 0;
+  padding: 0;
+}
+
+.wrapper {
+  width: 1200px;
+  padding: 0 20px;
+  margin: 0 auto;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  border: 0;
+  padding: 0;
+  white-space: nowrap;
+  clip-path: inset(100%);
+  clip: rect(0 0 0 0);
+  overflow: hidden;
+}
+
+.title {
+  font-family: "Gilroy", "Arial", sans-serif;
+  font-size: 47px;
+  line-height: 58px;
+  font-weight: 800;
+}
+
+.button {
+  position: relative;
+  z-index: 2;
+  display: block;
+  font-family: "Gilroy", "Arial", sans-serif;
+  font-size: 18px;
+  line-height: 22px;
+  font-weight: 800;
+  letter-spacing: 0.2em;
+  text-align: center;
+  text-transform: uppercase;
+  color: var(--basic-black);
+  background-color: transparent;
+  padding: 9px 10px;
+  padding-right: 5px;
+  border: none;
+  cursor: pointer;
+}
+
+.button::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 0;
+  transform: translateY(-50%);
+  z-index: -1;
+  width: 100%;
+  height: 20%;
+  background-color: var(--special-yellow-dark);
+  transition: height 0.5s;
+}
+
+.button:hover::before,
+.button:focus::before {
+  height: 100%;;
+}
+
+.button:active {
+  color: var(--black-30);
+}
