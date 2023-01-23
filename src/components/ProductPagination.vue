@@ -1,17 +1,23 @@
 <template>
   <ul class="pagination">
     <li class="pagination-item">
-      <a class="pagination-toggle pagination-toggle-previous" href="#">Назад</a>
+      <button class="pagination-toggle pagination-toggle-previous">Назад</button>
     </li>
     <li class="pagination-item">
-      <ul class="pages-list">
-        <li v-for="page in pages" class="pages-item">
-          <a href="#">{{ page }}</a>
-        </li>
-      </ul>
+      <div class="pages-list">
+        <button
+          v-for="page in pages"
+          type="button"
+          class="pages-item"
+          :class="{'pages-item-current': currentPage === page}"
+          :key="page"
+        >
+          {{ page }}
+        </button>
+      </div>
     </li>
     <li class="pagination-item">
-      <a class="pagination-toggle pagination-toggle-next" href="#">Вперед</a>
+      <button class="pagination-toggle pagination-toggle-next">Вперед</button>
     </li>
   </ul>
 </template>
@@ -20,6 +26,10 @@
 export default {
   props: {
     pages: {
+      type: Number,
+      required: true
+    },
+    currentPage: {
       type: Number,
       required: true
     }
@@ -48,26 +58,28 @@ export default {
   flex-wrap: wrap;
   gap: 10px 30px;
   padding: 0;
-  margin: 0;
-  list-style: none;
 }
 
-.pages-item a {
+.pages-item {
+  padding: 0;
+  border: none;
   color: var(--black-30);
+  background-color: inherit;
+  cursor: pointer;
 }
 
-.pages-item-current a {
+.pages-item-current {
   pointer-events: none;
   cursor: default;
 }
 
-.pages-item a:hover,
-.pages-item a:focus {
+.pages-item:hover,
+.pages-item:focus {
   color: var(--black-60);
 }
 
-.pages-item-current a,
-.pages-item-current a:hover,
+.pages-item-current,
+.pages-item-current:hover,
 .pages-item a:active {
   color: var(--basic-black);
 }
@@ -81,6 +93,8 @@ export default {
   margin-right: -0.1em;
   padding: 25px 30px;
   color: var(--basic-black);
+  background-color: inherit;
+  border: none;
 }
 
 .pagination-toggle:hover,

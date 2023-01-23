@@ -1,6 +1,10 @@
 <template>
   <ul class="product-list">
-		<ProductItem v-for="product in products" :product="product" />
+		<ProductItem
+      v-for="product in products"
+      :product="product"
+      :key="product.id"
+    />
 	</ul>
 </template>
 
