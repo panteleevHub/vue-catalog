@@ -35,6 +35,16 @@
             v-model="checkedColors"
             class="visually-hidden filter-color-input"
             type="checkbox"
+            value="all"
+            id="all-colors"
+          >
+          <label class="filter-color-label" for="all-colors">Все</label>
+        </li>
+        <li class="filter-color-item">
+          <input
+            v-model="checkedColors"
+            class="visually-hidden filter-color-input"
+            type="checkbox"
             value="black"
             id="color-black"
           >
@@ -86,6 +96,10 @@
       <legend>Bluetooth</legend>
       <ul class="filter-bluetooth-list">
         <li class="filter-bluetooth-item">
+          <input v-model="bluetooth" class="visually-hidden filter-bluetooth-input" type="radio" value="all" id="bluetooth-all">
+          <label class="filter-bluetooth-label" for="bluetooth-all">Все</label>
+        </li>
+        <li class="filter-bluetooth-item">
           <input v-model="bluetooth" class="visually-hidden filter-bluetooth-input" type="radio" :value="true" id="bluetooth-yes">
           <label class="filter-bluetooth-label" for="bluetooth-yes">Есть</label>
         </li>
@@ -110,8 +124,8 @@ export default {
       },
       minPrice: 0,
       maxPrice: 10000,
-      checkedColors: ['black'],
-      bluetooth: true,
+      checkedColors: ['all'],
+      bluetooth: 'all',
       isColorChecked: true
     }
   },
