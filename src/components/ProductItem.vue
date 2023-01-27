@@ -6,6 +6,7 @@
     <p class="product-info">
       <a class="product-name" href="#">{{ product.name }}</a>
       <span class="product-price">{{ product.price }} руб.</span>
+      <span class="product-sell">Продано: {{ product.sell }} штук</span>
     </p>
     <p class="product-buttons">
       <a href="#" class="product-button product-button-cart button">В корзину</a>
@@ -49,15 +50,15 @@ export default {
 }
 
 .product-info {
-  display: flex;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  row-gap: 10px;
   font-family: "Gilroy", "Arial", sans-serif;
   letter-spacing: 0.06em;
   margin: 0;
 }
 
 .product-name {
-  width: 265px;
   font-size: 18px;
   line-height: 22px;
   font-weight: 800;
@@ -69,6 +70,7 @@ export default {
   line-height: 18px;
   padding-top: 3px;
   margin-right: -0.06em;
+  text-align: right;
 }
 
 .product-buttons {

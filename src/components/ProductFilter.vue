@@ -9,7 +9,7 @@
           :min="range.min"
           :max="range.max"
           :step="range.step"
-          :value="minPrice"
+          :value="filterData.minPrice"
           @input="onMinPriceChange"
         >
         <input
@@ -17,13 +17,13 @@
           :min="range.min"
           :max="range.max"
           :step="range.step"
-          :value="maxPrice"
+          :value="filterData.maxPrice"
           @input="onMaxPriceChange"
         >
       </div>
       <div class="price-controls">
-        <p class="price min-price">от {{ minPrice }}</p>
-        <p class="price max-price">до {{ maxPrice }}</p>
+        <p class="price min-price">от {{ filterData.minPrice }}</p>
+        <p class="price max-price">до {{ filterData.maxPrice }}</p>
       </div>
     </fieldset>
     <fieldset class="filter-fieldset filter-color">
@@ -32,7 +32,7 @@
       <ul class="filter-color-list">
         <li class="filter-color-item">
           <input
-            v-model="checkedColors"
+            v-model="filterData.checkedColors"
             class="visually-hidden filter-color-input"
             type="checkbox"
             value="all"
@@ -42,7 +42,7 @@
         </li>
         <li class="filter-color-item">
           <input
-            v-model="checkedColors"
+            v-model="filterData.checkedColors"
             class="visually-hidden filter-color-input"
             type="checkbox"
             value="black"
@@ -52,7 +52,7 @@
         </li>
         <li class="filter-color-item">
           <input
-            v-model="checkedColors"
+            v-model="filterData.checkedColors"
             class="visually-hidden filter-color-input"
             type="checkbox"
             value="white"
@@ -62,7 +62,7 @@
         </li>
         <li class="filter-color-item">
           <input
-            v-model="checkedColors"
+            v-model="filterData.checkedColors"
             class="visually-hidden filter-color-input"
             type="checkbox"
             value="blue"
@@ -72,7 +72,7 @@
         </li>
         <li class="filter-color-item">
           <input
-            v-model="checkedColors"
+            v-model="filterData.checkedColors"
             class="visually-hidden filter-color-input"
             type="checkbox"
             value="red"
@@ -82,7 +82,7 @@
         </li>
         <li class="filter-color-item">
           <input
-            v-model="checkedColors"
+            v-model="filterData.checkedColors"
             class="visually-hidden filter-color-input"
             type="checkbox"
             value="pink"
@@ -96,25 +96,48 @@
       <legend>Bluetooth</legend>
       <ul class="filter-bluetooth-list">
         <li class="filter-bluetooth-item">
-          <input v-model="bluetooth" class="visually-hidden filter-bluetooth-input" type="radio" value="all" id="bluetooth-all">
+          <input v-model="filterData.bluetooth" class="visually-hidden filter-bluetooth-input" type="radio" value="all" id="bluetooth-all">
           <label class="filter-bluetooth-label" for="bluetooth-all">Все</label>
         </li>
         <li class="filter-bluetooth-item">
-          <input v-model="bluetooth" class="visually-hidden filter-bluetooth-input" type="radio" :value="true" id="bluetooth-yes">
+          <input v-model="filterData.bluetooth" class="visually-hidden filter-bluetooth-input" type="radio" :value="true" id="bluetooth-yes">
           <label class="filter-bluetooth-label" for="bluetooth-yes">Есть</label>
         </li>
         <li class="filter-bluetooth-item">
-          <input v-model="bluetooth" class="visually-hidden filter-bluetooth-input" type="radio" :value="false" id="bluetooth-no">
+          <input v-model="filterData.bluetooth" class="visually-hidden filter-bluetooth-input" type="radio" :value="false" id="bluetooth-no">
           <label class="filter-bluetooth-label" for="bluetooth-no">Нет</label>
         </li>
       </ul>
     </fieldset>
-    <button ref="submitButton" class="filter-submit button" type="submit">Показать</button>
+    <button
+      ref="submitButton"
+      class="filter-submit button"
+      type="submit"
+    >
+      Показать
+    </button>
+    <button
+      @click="onResetButtonClick"
+      class="filter-reset"
+      type="button"
+    >
+      Сбросить фильтр
+    </button>
   </form>
 </template>
 
 <script>
 export default {
+  props: {
+    filterOptions: {
+      type: Object
+    }
+  },
+
+  mounted() {
+    this.initialFilterOptions = {...this.filterOptions};
+  },
+
   data() {
     return {
       range: {
@@ -122,10 +145,13 @@ export default {
         max: 10000,
         step: 1000
       },
-      minPrice: 0,
-      maxPrice: 10000,
-      checkedColors: ['all'],
-      bluetooth: 'all',
+      filterData: {
+        minPrice: this.filterOptions.minPrice,
+        maxPrice: this.filterOptions.maxPrice,
+        checkedColors: this.filterOptions.checkedColors,
+        bluetooth: this.filterOptions.bluetooth,
+      },
+      initialFilterOptions: {},
       isColorChecked: true
     }
   },
@@ -133,8 +159,8 @@ export default {
   computed: {
     rangeBarStyle() {
       return {
-        left: `${this.minPrice / this.range.max * 100}%`,
-        right: `${100 - (this.maxPrice / this.range.max * 100)}%`,
+        left: `${this.filterData.minPrice / this.range.max * 100}%`,
+        right: `${100 - (this.filterData.maxPrice / this.range.max * 100)}%`,
       };
     }
   },
@@ -143,33 +169,38 @@ export default {
     onFormSubmit() {
       this.$refs.submitButton.blur();
 
-      if (this.checkedColors.length === 0) {
+      if (this.filterData.checkedColors.length === 0) {
         this.isColorChecked = false;
         return;
       }
 
       this.isColorChecked = true;
 
-      this.$emit('changeFilter', {
-        minPrice: this.minPrice,
-        maxPrice: this.maxPrice,
-        checkedColors: this.checkedColors,
-        bluetooth: this.bluetooth,
+      this.$emit('update:filterOptions', {
+        ...this.filterData
       });
     },
 
     onMinPriceChange({target}) {
-      this.minPrice = parseInt(target.value);
-      if (this.minPrice >= this.maxPrice) {
-        this.minPrice = this.maxPrice - this.range.step;
+      this.filterData.minPrice = parseInt(target.value);
+      if (this.filterData.minPrice >= this.filterData.maxPrice) {
+        this.filterData.minPrice = this.filterData.maxPrice - this.range.step;
       }
     },
 
     onMaxPriceChange({target}) {
-      this.maxPrice = parseInt(target.value);
-      if (this.maxPrice <= this.minPrice) {
-        this.maxPrice = this.minPrice + this.range.step;
+      this.filterData.maxPrice = parseInt(target.value);
+      if (this.filterData.maxPrice <= this.filterData.minPrice) {
+        this.filterData.maxPrice = this.filterData.minPrice + this.range.step;
       }
+    },
+
+    onResetButtonClick() {
+      this.filterData = {...this.initialFilterOptions};
+
+      this.$emit('update:filterOptions', {
+        ...this.initialFilterOptions
+      });
     }
   }
 }
@@ -394,5 +425,20 @@ export default {
 .filter-submit {
   width: 100%;
   padding-right: 14px;
+  margin-bottom: 20px;
+}
+
+.filter-reset {
+  width: 100%;
+  font-size: 16px;
+  letter-spacing: 0.04em;
+  padding: 0;
+  border: none;
+  background-color: inherit;
+  cursor: pointer;
+}
+
+.filter-reset:hover {
+  text-decoration: underline;
 }
 </style>

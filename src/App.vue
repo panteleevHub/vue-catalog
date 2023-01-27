@@ -27,7 +27,7 @@
       <div class="wrapper catalog-content-container">
         <section class="filter">
           <h2 class="visually-hidden">Фильтр товаров</h2>
-          <ProductFilter @change-filter="onFilterChange" />
+          <ProductFilter v-model:filterOptions="filterOptions" />
         </section>
         <section class="products">
           <h2 class="visually-hidden">Список товаров</h2>
@@ -147,7 +147,7 @@ export default {
           bluetooth: false
         }
       ],
-      selectedFilterItems: {
+      filterOptions: {
         minPrice: 0,
         maxPrice: 10000,
         checkedColors: ['all'],
@@ -165,12 +165,12 @@ export default {
   computed: {
     filteredProducts() {
       return this.products.filter((product) => {
-        return product.price >= this.selectedFilterItems.minPrice &&
-          product.price <= this.selectedFilterItems.maxPrice &&
-          (this.selectedFilterItems.checkedColors.includes(product.color) ||
-          this.selectedFilterItems.checkedColors.includes('all')) &&
-          (this.selectedFilterItems.bluetooth === product.bluetooth ||
-          this.selectedFilterItems.bluetooth === 'all');
+        return product.price >= this.filterOptions.minPrice &&
+          product.price <= this.filterOptions.maxPrice &&
+          (this.filterOptions.checkedColors.includes(product.color) ||
+          this.filterOptions.checkedColors.includes('all')) &&
+          (this.filterOptions.bluetooth === product.bluetooth ||
+          this.filterOptions.bluetooth === 'all');
       });
     },
 
@@ -193,12 +193,7 @@ export default {
 
   methods: {
     onFilterChange(data) {
-      this.selectedFilterItems = {
-        minPrice: data.minPrice,
-        maxPrice: data.maxPrice,
-        checkedColors: data.checkedColors,
-        bluetooth: data.bluetooth
-      };
+      this.filterOptions = {...data};
     }
   },
 
