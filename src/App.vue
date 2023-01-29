@@ -32,8 +32,12 @@
         <section class="products">
           <h2 class="visually-hidden">Список товаров</h2>
           <div v-if="!isProductListEmpty">
-            <ProductList :products="sortedProducts" />
-            <ProductPagination :pages="pages" :currentPage="currentPage" />
+            <ProductList :products="currentPageProducts" />
+            <ProductPagination
+              v-if="isPaginationAvailable"
+              v-model:currentPage="currentPage"
+              :pages="totalPages"
+            />
           </div>
           <p v-else class="products-message">Нет товаров</p>
         </section>
@@ -145,6 +149,96 @@ export default {
           image: monopodPro,
           color: 'white',
           bluetooth: false
+        },
+        {
+          id: 11,
+          name: 'Черная селфи-палка',
+          price: 950,
+          sell: 3600,
+          image: monopodAmateur,
+          color: 'black',
+          bluetooth: false
+        },
+        {
+          id: 12,
+          name: 'Профессиональная селфи-палка',
+          price: 7500,
+          sell: 765,
+          image: monopodPro,
+          color: 'white',
+          bluetooth: true
+        },
+        {
+          id: 13,
+          name: 'Розовая селфи-палка',
+          price: 560,
+          sell: 265,
+          image: monopodUnsinkable,
+          color: 'pink',
+          bluetooth: false
+        },
+        {
+          id: 14,
+          name: 'Красная селфи-палка',
+          price: 2300,
+          sell: 1000,
+          image: monopodFollowMe,
+          color: 'red',
+          bluetooth: false
+        },
+        {
+          id: 15,
+          name: 'Красная селфи-палка',
+          price: 4500,
+          sell: 2512,
+          image: monopodUnsinkable,
+          color: 'red',
+          bluetooth: true
+        },
+        {
+          id: 16,
+          name: 'Черная селфи-палка',
+          price: 2500,
+          sell: 2789,
+          image: monopodUnsinkable,
+          color: 'black',
+          bluetooth: true
+        },
+        {
+          id: 17,
+          name: 'Черная селфи-палка',
+          price: 999,
+          sell: 2700,
+          image: monopodAmateur,
+          color: 'black',
+          bluetooth: false
+        },
+        {
+          id: 18,
+          name: 'Белая селфи-палка',
+          price: 999,
+          sell: 1136,
+          image: monopodAmateur,
+          color: 'white',
+          bluetooth: false
+        },
+        {
+          id: 19,
+          name: 'Розовая селфи палка',
+          price: 999,
+          sell: 720,
+          image: monopodAmateur,
+          color: 'pink',
+          bluetooth: false
+        },
+        {
+          id: 20,
+          name: 'Синяя селфи-палка',
+          price: 999,
+          sell: 1789,
+          image: monopodAmateur,
+          color: 'blue',
+          bluetooth: false
         }
       ],
       filterOptions: {
@@ -157,8 +251,8 @@ export default {
         value: 'price',
         direction: 'up'
       },
-      pages: 3,
-      currentPage: 1
+      currentPage: 1,
+      productsPerPage: 4,
     }
   },
 
@@ -175,6 +269,8 @@ export default {
     },
 
     sortedProducts() {
+      this.currentPage = 1;
+
       if (this.sort.direction === 'up') {
         return [...this.filteredProducts].sort((productA, productB) => {
           return productA[this.sort.value] - productB[this.sort.value];
@@ -186,14 +282,23 @@ export default {
         });
     },
 
+    currentPageProducts() {
+      return this.sortedProducts.slice(
+        (this.currentPage - 1) * this.productsPerPage,
+        this.currentPage * this.productsPerPage
+      );
+    },
+
+    totalPages() {
+      return Math.ceil(this.filteredProducts.length / this.productsPerPage);
+    },
+
     isProductListEmpty() {
       return this.filteredProducts.length === 0;
-    }
-  },
+    },
 
-  methods: {
-    onFilterChange(data) {
-      this.filterOptions = {...data};
+    isPaginationAvailable() {
+      return this.totalPages > 1;
     }
   },
 

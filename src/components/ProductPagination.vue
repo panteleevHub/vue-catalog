@@ -1,12 +1,13 @@
 <template>
   <ul class="pagination">
     <li class="pagination-item">
-      <button class="pagination-toggle pagination-toggle-previous">Назад</button>
+      <button @click="onPrevButtonClick" class="pagination-toggle pagination-toggle-previous">Назад</button>
     </li>
     <li class="pagination-item">
       <div class="pages-list">
         <button
           v-for="page in pages"
+          @click="onPageClick(page, $event)"
           type="button"
           class="pages-item"
           :class="{'pages-item-current': currentPage === page}"
@@ -17,7 +18,7 @@
       </div>
     </li>
     <li class="pagination-item">
-      <button class="pagination-toggle pagination-toggle-next">Вперед</button>
+      <button @click="onNextButtonClick" class="pagination-toggle pagination-toggle-next">Вперед</button>
     </li>
   </ul>
 </template>
@@ -32,6 +33,29 @@ export default {
     currentPage: {
       type: Number,
       required: true
+    }
+  },
+
+  methods: {
+    onPageClick(page, {target}) {
+      target.blur();
+      this.$emit('update:currentPage', page);
+    },
+
+    onPrevButtonClick({target}) {
+      target.blur();
+
+      if (this.currentPage !== 1) {
+        this.$emit('update:currentPage', this.currentPage - 1);
+      }
+    },
+
+    onNextButtonClick({target}) {
+      target.blur();
+
+      if (this.currentPage < this.pages) {
+        this.$emit('update:currentPage', this.currentPage + 1);
+      }
     }
   }
 }
@@ -95,6 +119,7 @@ export default {
   color: var(--basic-black);
   background-color: inherit;
   border: none;
+  cursor: pointer;
 }
 
 .pagination-toggle:hover,
