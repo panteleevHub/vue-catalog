@@ -2,7 +2,9 @@
   <form @submit.prevent="onFormSubmit" class="filter-form">
     <fieldset class="filter-fieldset filter-price">
       <legend>Стоимость</legend>
-      <div class="range-selected-bar" :style="rangeBarStyle"></div>
+      <div class="range-bar">
+        <div class="range-selected-bar" :style="rangeBarStyle"></div>
+      </div>
       <div class="range-controls">
         <input
           type="range"
@@ -240,13 +242,19 @@ export default {
   padding-bottom: 38px;
 }
 
+.range-bar {
+  position: absolute;
+  width: 100%;
+  height: 2px;
+  background-color: var(--black-20);
+}
+
 .range-selected-bar {
   position: absolute;
   left: 0;
   right: 0;
   height: 2px;
   background-color: var(--special-green);
-  z-index: 2;
 }
 
 .range-controls {
@@ -263,20 +271,33 @@ export default {
   position: absolute;
   top: 0;
   left: 0;
-  background-color: var(--black-20);
+  background-color: transparent;
   margin: 0;
+  pointer-events: none;
 }
 
 .range-controls input[type="range"]::-webkit-slider-thumb {
   appearance: none;
-  z-index: 3;
-  position: relative;
   width: 20px;
   height: 20px;
   background-color: var(--special-grey);
   border: 8px solid var(--basic-white);
   border-radius: 50%;
   box-shadow: 0px 2px 2px var(--black-20);
+  pointer-events: all;
+  cursor: pointer;
+}
+
+.range-controls input[type="range"]::-moz-range-thumb {
+  appearance: none;
+  box-sizing: border-box;
+  width: 20px;
+  height: 20px;
+  background-color: var(--special-grey);
+  border: 8px solid var(--basic-white);
+  border-radius: 50%;
+  box-shadow: 0px 2px 2px var(--black-20);
+  pointer-events: all;
   cursor: pointer;
 }
 
