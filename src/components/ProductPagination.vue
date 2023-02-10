@@ -1,7 +1,13 @@
 <template>
   <ul class="pagination">
     <li class="pagination-item">
-      <button @click="onPrevButtonClick" class="pagination-toggle pagination-toggle-previous">Назад</button>
+      <button
+        @click="onPrevButtonClick"
+        class="pagination-toggle pagination-toggle-previous"
+        :disabled="isPrevButtonDisabled"
+      >
+        Назад
+      </button>
     </li>
     <li class="pagination-item">
       <div class="pages-list">
@@ -18,7 +24,13 @@
       </div>
     </li>
     <li class="pagination-item">
-      <button @click="onNextButtonClick" class="pagination-toggle pagination-toggle-next">Вперед</button>
+      <button
+        @click="onNextButtonClick"
+        class="pagination-toggle pagination-toggle-next"
+        :disabled="isNextButtonDisabled"
+      >
+        Вперед
+      </button>
     </li>
   </ul>
 </template>
@@ -33,6 +45,16 @@ export default {
     currentPage: {
       type: Number,
       required: true
+    }
+  },
+
+  computed: {
+    isPrevButtonDisabled() {
+      return this.currentPage === 1;
+    },
+
+    isNextButtonDisabled() {
+      return this.currentPage === this.pages;
     }
   },
 
@@ -129,5 +151,11 @@ export default {
 
 .pagination-toggle:active {
   color: var(--black-30);
+}
+
+.pagination-toggle:disabled {
+  color: var(--black-10);
+  background-color: var(--basic-grey-light);
+  pointer-events: none;
 }
 </style>
